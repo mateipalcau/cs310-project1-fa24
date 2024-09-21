@@ -102,7 +102,97 @@ public class ClassSchedule {
     
     public String convertJsonToCsvString(JsonObject json) {
         
-        return ""; // remove this!
+        Object j=new JsonObject();
+        JsonObject j1=new JsonObject();
+        JsonObject j2=new JsonObject();
+        List list=new ArrayList();
+        String s;
+        
+        
+        list=(ArrayList)json.get("section");
+        j=list.get(0);
+        String jsonString=Jsoner.serialize(j);
+        j2=getJson(jsonString);
+        String jsonString1=Jsoner.serialize(j2);
+        
+        ArrayList<String> type = new ArrayList<String>();
+        ArrayList<String> schedule = new ArrayList<String>();
+        ArrayList<String> schedule1 = new ArrayList<String>();
+        LinkedHashMap<String,String> scheduletype=new LinkedHashMap();
+        LinkedHashMap<String,String> subject=new LinkedHashMap();
+        LinkedHashMap<String,Object> course=new LinkedHashMap();
+        
+        
+        List<String[]> addresses=new ArrayList<String[]>();
+        String[] names={"crn","subject","num","description","section","type","credits","start","end","days","where","schedule","instructor"};
+        addresses.add(names);
+        
+        
+        for(HashMap.Entry<String,Object> entry : json.entrySet()){
+            String key=entry.getKey();
+            if(key.equalsIgnoreCase("scheduletype")){
+                Object obj=new JsonObject();
+                obj=entry.getValue();
+                String jsonString_1=Jsoner.serialize(obj);
+                JsonObject j_1=new JsonObject();
+                j_1=getJson(jsonString_1);
+                for(HashMap.Entry<String,Object> entry1:j_1.entrySet()){
+                    String key1=entry1.getKey();
+                    Object obj1=new JsonObject();
+                    obj1=entry1.getValue();
+                    String jString=Jsoner.serialize(obj1);
+                    
+                    scheduletype.put(key1, jString);
+                }
+            }
+            if(key.equalsIgnoreCase("subject")){
+                Object obj=new JsonObject();
+                obj=entry.getValue();
+                String jsonString_1=Jsoner.serialize(obj);
+                JsonObject j_1=new JsonObject();
+                j_1=getJson(jsonString_1);
+                for(HashMap.Entry<String,Object> entry1:j_1.entrySet()){
+                    String key1=entry1.getKey();
+                    Object obj1=new JsonObject();
+                    obj1=entry1.getValue();
+                    String jString=Jsoner.serialize(obj1);
+                    
+                    subject.put(key1, jString);
+                }
+            }
+            if(key.equalsIgnoreCase("course")){
+                Object obj=new JsonObject();
+                obj=entry.getValue();
+                String jsonString_1=Jsoner.serialize(obj);
+                JsonObject j_1=new JsonObject();
+                j_1=getJson(jsonString_1);
+                String t1=entry.getValue().toString();
+                for(HashMap.Entry<String,Object> entry1:j_1.entrySet()){
+                    LinkedHashMap<String,String> course_object=new LinkedHashMap();
+                    String key1=entry1.getKey();
+                    Object obj1=new JsonObject();
+                    obj1=entry1.getValue();
+                    String jsonString_2=Jsoner.serialize(obj1);
+                    JsonObject j_2=new JsonObject();
+                    j_2=getJson(jsonString_2);
+                    String t=entry1.getValue().toString();
+                    
+                    course.put(key1,course_object);
+                    
+                    for(HashMap.Entry<String,Object> entry2:j_2.entrySet()){
+                        String key2=entry2.getKey();
+                        String jString=entry2.getValue().toString();
+                        
+                        course_object.put(key2,jString);
+                    }
+                }
+            }
+        }
+        
+        
+        
+        String str=getCsvString(addresses);
+        return str;
         
     }
     
